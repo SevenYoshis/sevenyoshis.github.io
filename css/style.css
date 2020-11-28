@@ -1482,5 +1482,10 @@ input[type="text"] {
 .js .animate-box {
   opacity: 0;
 }
+.ball {
+  position: absolute;
+  border-radius: 100%;
+  opacity: 0.7;
+}
 
 /*# sourceMappingURL=style.css.map */

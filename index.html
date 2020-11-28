@@ -91,7 +91,20 @@
 					<div class="display-t ">
 						<div class="display-tc  animate-box" data-animate-effect="fadeIn">
 							<p><img src="images/selfie.png" alt="me" class="img-responsive img-circle" style = "max-height: 100%"></p>
-							<h1>hi im savan</h1>
+							<h1>hi im savan<span id="cursor">|</span>
+								<script>
+									var cursor = true;
+									var speed = 500;
+									setInterval(() => {
+									  if(cursor) {
+										document.getElementById('cursor').style.opacity = 0;
+										cursor = false;
+									  }else {
+										document.getElementById('cursor').style.opacity = 1;
+										cursor = true;
+									  }
+									}, speed);
+								</script></h1>
 							<h2>(are you lost?)</h2>
 								<p>
 									<ul class="fh5co-social-icons">

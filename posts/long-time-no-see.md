@@ -3,7 +3,8 @@ title: "long time no see"
 date: "2025-07-31"
 subject: "getting back into things"
 ---
-being in nyc for the last 7 months has me reflecting a lot, i think im ready to start writing in public again. 
+being in nyc for the last 7 months has me reflecting a lot, i think im ready to start writing in public again.
+ 
 i feel like a lot of the benefit of posting on any platform is being able to get replies from people and maintaining the connections you have with them through tiny updates.
 
 so when i dont post i dont get to connect back with the people i know from sf or raleigh or charlotte etc. 

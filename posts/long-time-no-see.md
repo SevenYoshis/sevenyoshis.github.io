@@ -9,3 +9,5 @@ i feel like a lot of the benefit of posting on any platform is being able to get
 moving from sf to nyc has me thinking a lot about the habits we form in new cities, the new people we surround ourselves with, and the habits we lose. i guess im just tired of doing the things ive been doing the way ive been doing them.
 
 nothing changes if nothing changes
+
+<!-- deployment trigger -->

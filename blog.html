@@ -107,27 +107,13 @@
 							<p class="date">December 15, 2023</p>
 							<div class="post-summary">
 								<p>You ever make what you think is a good amount of spaghetti and then you realize woah thats way too much who's going to eat that? and then you ask your roommates and like no one wants this extra gallon of spaghetti...</p>
-								<p class="read-more" onclick="window.open('posts/spaghetti-incident.md', '_blank')">Click to read more →</p>
+								<p class="read-more" onclick="loadAndDisplayPost('spaghetti-incident')">Click to read more →</p>
 							</div>
+							<div class="post-full" style="display: none;"></div>
 						</div>
 					</article>
 
-					<article class="animate-box">
-						<div class="blog-post" id="post-coffee-shop">
-							<div class="email-header">
-								<span class="from">From: savan</span>
-								<span class="to">To: you</span>
-								<span class="bcc">BCC: everyone else</span>
-								<span class="subject">Subject: The Coffee Shop Code Review</span>
-							</div>
-							<h3>The Coffee Shop Code Review</h3>
-							<p class="date">December 5, 2023</p>
-							<div class="post-summary">
-								<p>Today I did a code review at a coffee shop. The barista asked what I was doing and I tried to explain what a pull request is. She nodded politely but I could tell she was thinking...</p>
-								<p class="read-more" onclick="window.open('posts/coffee-shop.md', '_blank')">Click to read more →</p>
-							</div>
-						</div>
-					</article>
+
 				</div>
 			</div>
 		</div>
@@ -155,92 +141,55 @@
 	<!-- Main -->
 	<script src="js/main.js"></script>
 
-		
-
-		
-		function togglePost(element) {
-			const overlay = document.getElementById('blog-overlay');
-			const blogList = document.querySelector('#fh5co-blog .row .col-md-8.col-md-offset-2');
-
-			// If overlay is visible, collapse
-			if (overlay.style.display === 'block') {
-				overlay.style.display = 'none';
-				overlay.innerHTML = '';
-				blogList.style.display = 'block';
-				// Clear hash
-				history.replaceState(null, null, window.location.pathname + window.location.search);
-				return;
+	<script>
+		// Simple function to load and display markdown content
+		async function loadAndDisplayPost(postId) {
+			try {
+				const response = await fetch(`posts/${postId}.md`);
+				const markdown = await response.text();
+				
+				// Remove frontmatter and get just the content
+				const content = markdown.replace(/^---\n[\s\S]*?\n---\n/, '');
+				
+				// Convert line breaks to paragraphs
+				const html = '<p>' + content.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>') + '</p>';
+				
+				// Find the post and update its content
+				const postElement = document.getElementById(`post-${postId}`);
+				const postSummary = postElement.querySelector('.post-summary');
+				const postFull = postElement.querySelector('.post-full');
+				
+				// Update the full content
+				postFull.innerHTML = html;
+				
+				// Hide summary and show full content
+				postSummary.style.display = 'none';
+				postFull.style.display = 'block';
+				
+				// Change the read-more button to collapse
+				const readMore = postElement.querySelector('.read-more');
+				readMore.textContent = 'Click to collapse ←';
+				readMore.onclick = function() { collapsePost(postId); };
+				
+			} catch (error) {
+				console.error('Error loading post:', error);
+				alert('Failed to load post');
 			}
-
-				// Otherwise, expand
-	const clone = element.cloneNode(true);
-	
-	// Show the full content in the clone
-	const summary = clone.querySelector('.post-summary');
-	const full = clone.querySelector('.post-full');
-	if (summary && full) {
-		summary.style.display = 'none';
-		full.style.display = 'block';
-	}
-	
-	// Change the read-more button to say 'Click to collapse' and make it collapse
-	const readMore = clone.querySelector('.read-more');
-	if (readMore) {
-		readMore.textContent = 'Click to collapse ←';
-		readMore.onclick = function() { togglePost(element); };
-	}
-	
-	// Add close button to the clone
-	const closeButton = document.createElement('button');
-	closeButton.innerHTML = '×';
-	closeButton.className = 'close-button';
-	closeButton.onclick = function() { togglePost(element); };
-	closeButton.style.position = 'fixed';
-	closeButton.style.top = '20px';
-	closeButton.style.right = '20px';
-	closeButton.style.zIndex = '1002';
-	clone.appendChild(closeButton);
-	
-	clone.classList.add('expanded');
-	overlay.innerHTML = '';
-	overlay.appendChild(clone);
-	overlay.style.display = 'block';
-	blogList.style.display = 'none';
-	window.scrollTo(0, 0);
-	
-	// Ensure close button is visible immediately
-	setTimeout(() => {
-		closeButton.style.display = 'flex';
-	}, 10);
-	
-	// Add a backup close button directly to the overlay
-	const backupCloseButton = document.createElement('button');
-	backupCloseButton.innerHTML = '×';
-	backupCloseButton.className = 'close-button';
-	backupCloseButton.onclick = function() { togglePost(element); };
-	backupCloseButton.style.position = 'fixed';
-	backupCloseButton.style.top = '20px';
-	backupCloseButton.style.right = '20px';
-	backupCloseButton.style.zIndex = '1002';
-	overlay.appendChild(backupCloseButton);
-	// Set hash
-	if (element.id) {
-		window.location.hash = '#' + element.id;
-	}
-	
-	// Add ESC key listener
-	document.addEventListener('keydown', function(e) {
-		if (e.key === 'Escape') {
-			togglePost(element);
 		}
-	});
-	
-	// Add click outside to close
-	overlay.addEventListener('click', function(e) {
-		if (e.target === overlay) {
-			togglePost(element);
-		}
-	});
+		
+		function collapsePost(postId) {
+			const postElement = document.getElementById(`post-${postId}`);
+			const postSummary = postElement.querySelector('.post-summary');
+			const postFull = postElement.querySelector('.post-full');
+			const readMore = postElement.querySelector('.read-more');
+			
+			// Show summary and hide full content
+			postSummary.style.display = 'block';
+			postFull.style.display = 'none';
+			
+			// Change button back to read more
+			readMore.textContent = 'Click to read more →';
+			readMore.onclick = function() { loadAndDisplayPost(postId); };
 		}
 		
 		// On page load or hash change, auto-expand if hash is present
@@ -264,7 +213,7 @@
 
 	</script>
 
-	<div id="blog-overlay" style="display:none;"></div>
+
 
 	</body>
 </html>

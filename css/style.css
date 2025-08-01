@@ -1492,4 +1492,296 @@ input[type="text"] {
   cursor: pointer;
 }
 
+/* Custom Blog Styles - Retro Email Blocks */
+.blog-post {
+  margin-bottom: 40px;
+  padding: 25px;
+  background: #f8f9fa;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 3px 3px 0px #ccc, 6px 6px 0px #e9ecef;
+  position: relative;
+  font-family: "Courier New", monospace;
+  transition: all 0.3s ease;
+}
+
+.blog-post:hover {
+  transform: translateY(-2px);
+  box-shadow: 4px 4px 0px #ccc, 8px 8px 0px #e9ecef;
+}
+
+/* Removed mail icon */
+
+.blog-post h3 {
+  margin-bottom: 15px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #2c3e50;
+  border-bottom: 2px solid #DD356E;
+  padding-bottom: 8px;
+  font-family: "Courier New", monospace;
+}
+
+.blog-post h3 a {
+  color: #2c3e50;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.blog-post h3 a:hover {
+  color: #DD356E;
+}
+
+.blog-post .date {
+  color: #6c757d;
+  font-size: 12px;
+  margin-bottom: 20px;
+  font-style: italic;
+  font-family: "Courier New", monospace;
+  background: #e9ecef;
+  padding: 5px 10px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.blog-post p {
+  margin-bottom: 15px;
+  line-height: 1.6;
+  color: #495057;
+  font-family: "Courier New", monospace;
+  font-size: 14px;
+}
+
+.blog-post p:last-child {
+  margin-bottom: 0;
+}
+
+/* Retro email header styling */
+.blog-post:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #DD356E, #ff6b9d, #DD356E);
+  border-radius: 8px 8px 0 0;
+}
+
+/* Email header styling */
+.email-header {
+  background: #e9ecef;
+  padding: 10px 15px;
+  margin: -25px -25px 20px -25px;
+  border-radius: 8px 8px 0 0;
+  border-bottom: 2px solid #DD356E;
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  color: #495057;
+}
+
+.email-header span {
+  display: block;
+  margin-bottom: 3px;
+  font-weight: bold;
+}
+
+.email-header .from {
+  color: #DD356E;
+}
+
+.email-header .to {
+  color: #6c757d;
+}
+
+.email-header .bcc {
+  color: #999;
+  font-size: 11px;
+}
+
+.email-header .subject {
+  color: #495057;
+  font-style: italic;
+}
+
+/* Post summary and full content styling */
+.post-summary {
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.post-summary p {
+  margin-bottom: 10px;
+}
+
+.read-more {
+  color: #DD356E !important;
+  font-weight: bold;
+  font-style: italic;
+  margin-top: 15px !important;
+  margin-bottom: 0 !important;
+  transition: color 0.3s ease;
+}
+
+.post-full {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e9ecef;
+  transition: opacity 0.3s ease;
+}
+
+.blog-post.expanded {
+  background: #fff;
+  box-shadow: none;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: auto;
+  padding: 50px;
+  margin: 0;
+  border-radius: 0;
+}
+
+.blog-post.expanded .read-more {
+  color: #DD356E !important;
+}
+
+.blog-post.expanded .email-header {
+  margin: -50px -50px 30px -50px;
+  border-radius: 0;
+  padding: 30px 50px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.blog-post.expanded h3 {
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+.blog-post.expanded .date {
+  font-size: 16px;
+  margin-bottom: 30px;
+}
+
+.blog-post.expanded p {
+  font-size: 18px;
+  line-height: 1.8;
+  margin-bottom: 25px;
+}
+
+.blog-post {
+  transition: all 0.3s ease;
+}
+
+.close-button {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #DD356E;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 28px;
+  cursor: pointer;
+  z-index: 1002;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  backdrop-filter: blur(10px);
+  background: rgba(221, 53, 110, 0.95);
+}
+
+.close-button:hover {
+  background: #b02a57;
+  transform: scale(1.1);
+}
+
+.blog-post.expanded {
+  position: relative;
+}
+
+#blog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: #fff;
+  z-index: 1000;
+  overflow: auto;
+  padding: 0;
+}
+
+#blog-overlay .blog-post {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #fff;
+  border: none;
+  box-shadow: none;
+  padding: 80px 30px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+#blog-overlay .blog-post.expanded {
+  position: static;
+  width: 100%;
+  height: auto;
+}
+
+#blog-overlay .blog-post h3 {
+  font-size: 28px;
+  line-height: 1.3;
+  margin-bottom: 25px;
+  font-weight: 600;
+  color: #1a1a1a;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+#blog-overlay .blog-post .date {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 25px;
+  font-weight: 400;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+#blog-overlay .blog-post p {
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  color: #333;
+  font-weight: 400;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+#blog-overlay .blog-post .email-header {
+  display: none;
+}
+
+#blog-overlay .blog-post .read-more {
+  font-size: 14px;
+  margin-top: 25px;
+  padding: 10px 20px;
+  background: #DD356E;
+  color: white !important;
+  border-radius: 4px;
+  display: inline-block;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+#blog-overlay .blog-post .read-more:hover {
+  background: #b02a57;
+  transform: translateY(-1px);
+}
+
 /*# sourceMappingURL=style.css.map */

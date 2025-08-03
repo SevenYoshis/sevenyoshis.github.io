@@ -640,6 +640,14 @@ h1, h2, h3, h4, h5, h6, figure {
   #fh5co-footer {
     padding: 3em 0;
   }
+  
+  /* Mobile-friendly paragraph margins */
+  #fh5co-blog p {
+    margin: 0 20px 20px 20px;
+    padding: 0 15px;
+    line-height: 1.6;
+    font-size: 16px;
+  }
 }
 
 #fh5co-content {

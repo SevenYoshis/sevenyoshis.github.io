@@ -110,9 +110,9 @@
 							<h2>(are you lost?)</h2>
 								<p>
 									<ul class="fh5co-social-icons">
-										<li><a href="https://twitter.com/itsnotsavan"><i class="icon-twitter"></i></a></li>
-										<li><a href="http://linkedin.com/in/savan-doshi"><i class="icon-linkedin"></i></a></li>
-										<li><a href="https://github.com/SevenYoshis"><i class="icon-github"></i></a></li>
+										<li><a href="https://twitter.com/itsnotsavan"><i class="fab fa-twitter" style="font-size:21px;color:#dd366f"></i></a></li>
+										<li><a href="http://linkedin.com/in/savan-doshi"><i class="fab fa-linkedin" style="font-size:21px;color:#dd366f"></i></a></li>
+										<li><a href="https://github.com/SevenYoshis"><i class="fab fa-github" style="font-size:21px;color:#dd366f"></i></a></li>
 									</ul>
 								</p>
 								<script src="https://kit.fontawesome.com/73b510380a.js" crossorigin="anonymous"></script>
@@ -152,6 +152,26 @@
 	<script src="js/jquery.flexslider-min.js"></script>
 	<!-- Main -->
 	<script src="js/main.js"></script>
+	
+	<!-- Social Icon Hover Effects -->
+	<script>
+		$(document).ready(function() {
+			$('.fh5co-social-icons li a').hover(
+				function() {
+					$(this).find('i').css({
+						'transform': 'translateY(-5px) scale(1.2)',
+						'color': '#DD356E'
+					});
+				},
+				function() {
+					$(this).find('i').css({
+						'transform': 'translateY(0) scale(1)',
+						'color': ''
+					});
+				}
+			);
+		});
+	</script>
 
 	</body>
 </html>

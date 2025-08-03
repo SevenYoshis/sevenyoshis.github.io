@@ -712,6 +712,13 @@ h1, h2, h3, h4, h5, h6, figure {
 			padding-right: 10px;
 			i {
 				font-size: 20px;
+				@include transition(.3s);
+			}
+			&:hover {
+				i {
+					@include transform(translateY(-5px) scale(1.2));
+					color: $brand-primary;
+				}
 			}
 		}
 	}

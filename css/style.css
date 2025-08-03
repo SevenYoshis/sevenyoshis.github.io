@@ -682,6 +682,101 @@ h1, h2, h3, h4, h5, h6, figure {
 }
 .fh5co-social-icons li a i {
   font-size: 20px;
+  transition: all 0.3s ease;
+}
+
+/* Cool hover animations for social icons */
+.fh5co-social-icons li a:hover i {
+  transform: translateY(-5px) scale(1.2);
+  color: #DD356E !important;
+}
+
+/* Chess icon hover animation */
+a[href*="chess.com"]:hover i {
+  transform: translateY(-5px) scale(1.2);
+  color: #DD356E;
+}
+
+/* FontAwesome icons hover animation */
+.fas, .fab, .far {
+  transition: all 0.3s ease;
+}
+
+.fas:hover, .fab:hover, .far:hover {
+  transform: translateY(-2px) scale(1.1);
+  color: #DD356E;
+}
+
+/* Play button hover animation */
+#play-pause-button:hover {
+  transform: translateY(-3px) scale(1.1);
+  color: #DD356E;
+}
+
+/* Gototop arrow hover animation */
+.gototop a:hover i {
+  transform: translateY(-3px) scale(1.1);
+  color: #DD356E;
+}
+
+/* Contact page icons hover animation */
+.contact-info li i {
+  transition: all 0.3s ease;
+}
+
+.contact-info li:hover i {
+  transform: translateY(-2px) scale(1.1);
+  color: #DD356E;
+}
+
+/* General icon hover effects for any icon that doesn't have specific styling */
+i[class*="icon-"]:not(.fh5co-social-icons i):not(.gototop i):not(.contact-info i) {
+  transition: all 0.3s ease;
+}
+
+i[class*="icon-"]:not(.fh5co-social-icons i):not(.gototop i):not(.contact-info i):hover {
+  transform: translateY(-2px) scale(1.1);
+  color: #DD356E;
+}
+
+/* Ensure social icons have proper hover effects */
+.fh5co-social-icons li a i {
+  transition: all 0.3s ease !important;
+}
+
+.fh5co-social-icons li a:hover i {
+  transform: translateY(-5px) scale(1.2) !important;
+  color: #DD356E !important;
+}
+
+/* More specific social icon hover effects */
+.fh5co-social-icons li a:hover i.icon-twitter,
+.fh5co-social-icons li a:hover i.icon-linkedin,
+.fh5co-social-icons li a:hover i.icon-github {
+  transform: translateY(-5px) scale(1.2) !important;
+  color: #DD356E !important;
+}
+
+/* Force hover effects for social icons */
+.fh5co-social-icons li a:hover i[class*="icon-"] {
+  transform: translateY(-5px) scale(1.2) !important;
+  color: #DD356E !important;
+}
+
+/* Direct targeting of social icons with maximum specificity */
+body .fh5co-social-icons li a:hover i.icon-twitter,
+body .fh5co-social-icons li a:hover i.icon-linkedin,
+body .fh5co-social-icons li a:hover i.icon-github {
+  transform: translateY(-5px) scale(1.2) !important;
+  color: #DD356E !important;
+}
+
+/* Alternative approach using attribute selectors */
+.fh5co-social-icons li a[href*="twitter"]:hover i,
+.fh5co-social-icons li a[href*="linkedin"]:hover i,
+.fh5co-social-icons li a[href*="github"]:hover i {
+  transform: translateY(-5px) scale(1.2) !important;
+  color: #DD356E !important;
 }
 
 .fh5co-heading {

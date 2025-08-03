@@ -250,6 +250,24 @@
 	};
 
 	
+	// Force hover effects for social icons
+	var socialIconHover = function() {
+		$('.fh5co-social-icons li a').hover(
+			function() {
+				$(this).find('i').css({
+					'transform': 'translateY(-5px) scale(1.2)',
+					'color': '#DD356E'
+				});
+			},
+			function() {
+				$(this).find('i').css({
+					'transform': 'translateY(0) scale(1)',
+					'color': ''
+				});
+			}
+		);
+	};
+
 	$(function(){
 		mobileMenuOutsideClick();
 		offcanvasMenu();
@@ -261,6 +279,7 @@
 		loaderPage();
 		counterWayPoint();
 		fullHeight();
+		socialIconHover();
 	});
 
 

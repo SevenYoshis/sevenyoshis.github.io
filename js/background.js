@@ -39,6 +39,7 @@ balls.forEach((el, i, ra) => {
     }
   );
 });
+
 var audio = new Audio("resources/mario.mp3");
 $(document).ready(function() {
     $('#play-pause-button').on("click",function(){

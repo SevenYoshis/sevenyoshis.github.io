@@ -707,6 +707,52 @@ a[href*="chess.com"]:hover i {
   color: #DD356E;
 }
 
+/* Floating animation for icons */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  25% {
+    transform: translateY(-60px) translateX(20px);
+  }
+  50% {
+    transform: translateY(-80px) translateX(0px);
+  }
+  75% {
+    transform: translateY(-60px) translateX(-20px);
+  }
+}
+
+/* Apply floating animation to social icons */
+.fh5co-social-icons li a i {
+  animation: float 15s ease-in-out infinite;
+}
+
+/* Stagger the animation for each icon */
+.fh5co-social-icons li:nth-child(1) a i {
+  animation-delay: 0s;
+}
+
+.fh5co-social-icons li:nth-child(2) a i {
+  animation-delay: 1s;
+}
+
+.fh5co-social-icons li:nth-child(3) a i {
+  animation-delay: 2s;
+}
+
+/* Floating animation for chess icon */
+a[href*="chess.com"] i {
+  animation: float 15s ease-in-out infinite;
+  animation-delay: 0.5s;
+}
+
+/* Floating animation for play button */
+#play-pause-button {
+  animation: float 15s ease-in-out infinite;
+  animation-delay: 1.5s;
+}
+
 /* Play button hover animation */
 #play-pause-button:hover {
   transform: translateY(-3px) scale(1.1);

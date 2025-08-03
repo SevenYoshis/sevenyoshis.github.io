@@ -17,6 +17,13 @@ body {
   line-height: 1.7;
   color: #333333;
   background: #fff;
+  cursor: url('../images/Alternate Select.cur') 96 96, auto;
+}
+
+/* Ensure custom cursor appears everywhere */
+* {
+  cursor: url('../images/Alternate Select.cur') 0 0, auto !important;
+}
 }
 
 #page {

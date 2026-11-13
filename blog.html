@@ -47,7 +47,7 @@
 	<link rel="stylesheet" href="css/flexslider.css">
 
 	<!-- Theme style  -->
-	<link rel="stylesheet" href="css/style.css?v=3">
+	<link rel="stylesheet" href="css/style.css?v=4">
 
 	<!-- Modernizr JS -->
 	<script src="js/modernizr-2.6.2.min.js"></script>
@@ -87,16 +87,9 @@
 	<div id="fh5co-blog">
 		<div class="container">
 			<div class="row animate-box">
-				<div class="col-md-12">
-					<div class="aol-header">
-						<span class="aol-envelope" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6L22 7"/></svg></span>
-						<div class="aol-header-text">
-							<h2>my thoughts (sometimes)</h2>
-							<p>You've Got Mail!</p>
-						</div>
-						<span id="aol-mail-count" class="aol-mail-count">5</span>
-					</div>
-					<p class="aol-sub">attempting</p>
+				<div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
+					<h2>my thoughts (sometimes)</h2>
+					<p>attempting</p>
 				</div>
 			</div>
 			<div class="row">
@@ -176,11 +169,6 @@
 			const badge = document.getElementById('unread-count');
 			badge.textContent = unread;
 			badge.style.display = unread ? '' : 'none';
-			const aolBadge = document.getElementById('aol-mail-count');
-			if (aolBadge) {
-				aolBadge.textContent = unread;
-				aolBadge.style.display = unread ? '' : 'none';
-			}
 		}
 		function escapeHtml(s) {
 			return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');

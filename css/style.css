@@ -1998,18 +1998,3 @@ input[type="text"] {
   .email-subject { font-size: 24px; }
   .email-date { display: none; }
 }
-
-/* AOL-style blog header */
-.aol-header { display: flex; align-items: center; gap: 16px; background: linear-gradient(180deg, #0091ea 0%, #0060a8 55%, #004e8a 100%); border: 1px solid #004e8a; border-radius: 10px; padding: 18px 24px; box-shadow: 3px 3px 0px #ccc; font-family: Arial, Helvetica, sans-serif; }
-.aol-envelope { flex: 0 0 auto; display: flex; align-items: center; }
-.aol-envelope svg { width: 40px; height: 40px; }
-.aol-header-text { flex: 1; min-width: 0; }
-#fh5co-blog .aol-header-text h2 { color: #fff; font-family: Arial, Helvetica, sans-serif; font-size: 30px; font-weight: 700; margin: 0 0 4px 0; line-height: 1.2; }
-#fh5co-blog .aol-header-text p { color: #cfe8ff; font-size: 15px; font-weight: 700; margin: 0; }
-.aol-mail-count { flex: 0 0 auto; background: #fff; color: #0060a8; font-family: Arial, Helvetica, sans-serif; font-weight: 700; font-size: 16px; border-radius: 12px; padding: 4px 12px; }
-.aol-sub { text-align: center; color: #6c757d; font-style: italic; font-size: 14px; margin: 12px 0 0 0; font-family: "Courier New", monospace; }
-@media (max-width: 767px) {
-  .aol-header { padding: 14px 16px; gap: 12px; }
-  #fh5co-blog .aol-header-text h2 { font-size: 22px; }
-  .aol-envelope svg { width: 30px; height: 30px; }
-}

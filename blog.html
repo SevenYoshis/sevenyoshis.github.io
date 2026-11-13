@@ -108,42 +108,7 @@
 					<div id="substack-embed-source" style="display:none">
 						<div class="substack-post-embed"><p lang="en">I believe god shuffles by Savan Doshi</p><p>again and again and again and again and</p><a data-post-link href="https://itssavan.substack.com/p/i-believe-god-shuffles">Read on Substack</a></div><script async src="https://substack.com/embedjs/embed.js" charset="utf-8"></script>
 					</div>
-					<div id="email-overlay" style="display:none">
-						<div class="email-backdrop" onclick="closePost()"></div>
-						<div class="email-window" role="dialog" aria-modal="true">
-							<div class="email-topbar">
-								<button class="email-back" onclick="closePost()">&larr; Back to inbox</button>
-								<button class="email-close" onclick="closePost()" aria-label="Close">&#10005;</button>
-							</div>
-							<h3 id="ov-subject" class="email-subject"></h3>
-							<div class="email-sender">
-								<div class="email-avatar">S</div>
-								<div class="email-sender-meta">
-									<div class="email-sender-line"><strong>savan doshi</strong> <span class="email-address">&lt;savandoshi7@gmail.com&gt;</span></div>
-									<div class="email-to-line"><button id="ov-details-toggle" onclick="toggleDetails()">to me &#9662;</button></div>
-								</div>
-								<div id="ov-date" class="email-date"></div>
-							</div>
-							<div id="ov-details" class="email-details" style="display:none">
-								<div><span>from:</span> savan doshi &lt;savandoshi7@gmail.com&gt;</div>
-								<div><span>to:</span> you</div>
-								<div><span>bcc:</span> everyone else</div>
-								<div><span>date:</span> <span id="ov-details-date"></span></div>
-								<div><span>subject:</span> <span id="ov-details-subject"></span></div>
-								<div><span>mailed-by:</span> <span id="ov-mailed-by">savan.studio</span></div>
-								<div><span>signed-by:</span> <span id="ov-signed-by">savandoshi7@gmail.com</span></div>
-							</div>
-							<div id="ov-body" class="email-body"></div>
-							<div class="email-nav">
-								<button id="ov-newer" onclick="navPost(-1)">&larr; newer</button>
-								<button id="ov-older" onclick="navPost(1)">older &rarr;</button>
-							</div>
-							<div class="email-reply">
-								<textarea id="ov-reply-text" placeholder="respond back&hellip;" rows="3"></textarea>
-								<button onclick="sendReply()">Send reply</button>
-							</div>
-						</div>
-					</div>
+
 				</div>
 			</div>
 		</div>
@@ -174,8 +139,8 @@
 
 	
 	<script>
-		// Inbox blog: posts render as email rows; clicking a row opens the
-		// post in an overlay styled like an opened email.
+		// Inbox blog: posts render as email rows; clicking a row expands the
+		// post inline, like an opened email in the list.
 		const POSTS = [
 			{ slug: 'i-believe-god-shuffles', title: 'i believe god shuffles', subject: 'i believe god shuffles [essay post]', date: 'Sep 4, 2026', dateFull: 'Fri, Sep 4, 2026, 8:22 PM', snippet: 'again and again and again and again and', embed: 'substack', mailedBy: 'substack.com', signedBy: 'substack.com' },
 			{ slug: 'its_coming', title: "it's coming", subject: "it's coming", date: 'May 18, 2026', dateFull: 'Mon, May 18, 2026', snippet: "On Wednesday May 20th at 7 AM 80,000 employees at Meta will have to roll a ten sided die, and if they roll a one, they'll die." },
@@ -208,6 +173,9 @@
 		function escapeHtml(s) {
 			return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 		}
+		function rowFor(slug) {
+			return document.querySelector('#inbox-list .inbox-row[data-slug="' + slug + '"]');
+		}
 		function renderRows() {
 			const list = document.getElementById('inbox-list');
 			list.innerHTML = '';
@@ -215,13 +183,15 @@
 				const li = document.createElement('li');
 				li.className = 'inbox-row' + (isRead(post.slug) ? ' read' : ' unread');
 				li.dataset.slug = post.slug;
-				li.onclick = function() { openPost(post.slug); };
 				li.innerHTML =
+					'<div class="row-summary" onclick="togglePost(\'' + post.slug + '\')">' +
 					'<span class="dot"></span>' +
 					'<span class="sender">savan doshi</span>' +
 					'<span class="subject">' + escapeHtml(post.subject) + '</span>' +
 					'<span class="snippet">' + escapeHtml(post.snippet) + '</span>' +
-					'<span class="date">' + post.date + '</span>';
+					'<span class="date">' + post.date + '</span>' +
+					'</div>' +
+					'<div class="row-expanded" style="display:none"></div>';
 				list.appendChild(li);
 			});
 			updateUnreadCount();
@@ -239,7 +209,7 @@
 			document.querySelectorAll('#inbox-list .inbox-row').forEach(function(row) {
 				const post = POSTS.find(function(p) { return p.slug === row.dataset.slug; });
 				const matchesSearch = !q || post.subject.toLowerCase().indexOf(q) !== -1 || post.snippet.toLowerCase().indexOf(q) !== -1 || post.title.toLowerCase().indexOf(q) !== -1;
-				const matchesTab = currentTab === 'all' || !isRead(post.slug);
+				const matchesTab = currentTab === 'all' || !isRead(post.slug) || post.slug === currentSlug;
 				const show = matchesSearch && matchesTab;
 				row.style.display = show ? '' : 'none';
 				if (show) visible++;
@@ -258,34 +228,64 @@
 			const withBold = content.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
 			return '<p>' + withBold.replace(/\n\n+/g, '</p><p>').replace(/\n/g, '<br>') + '</p>';
 		}
-		function clearOverlayBody() {
-			// The Substack embed node lives inside the overlay body while open;
-			// move it back to its hidden home before the body is replaced.
-			const embed = document.querySelector('#ov-body .substack-post-embed');
+		function clearExpandedBody() {
+			// The Substack embed node lives inside the expanded post while open;
+			// move it back to its hidden home before the block is cleared.
+			const embed = document.querySelector('.row-expanded .substack-post-embed');
 			const home = document.getElementById('substack-embed-source');
 			if (embed && home) home.appendChild(embed);
-			document.getElementById('ov-body').innerHTML = '';
+		}
+		function expandedHtml(post) {
+			const idx = POSTS.findIndex(function(p) { return p.slug === post.slug; });
+			return '' +
+			'<button class="exp-collapse" onclick="collapsePost()">Click to collapse &larr;</button>' +
+			'<h3 class="email-subject">' + escapeHtml(post.title) + '</h3>' +
+			'<div class="email-sender">' +
+			'<div class="email-avatar">S</div>' +
+			'<div class="email-sender-meta">' +
+			'<div class="email-sender-line"><strong>savan doshi</strong> <span class="email-address">&lt;savandoshi7@gmail.com&gt;</span></div>' +
+			'<div class="email-to-line"><button onclick="toggleDetails(\'' + post.slug + '\')">to me &#9662;</button></div>' +
+			'</div>' +
+			'<div class="email-date">' + post.dateFull + '</div>' +
+			'</div>' +
+			'<div id="exp-details-' + post.slug + '" class="email-details" style="display:none">' +
+			'<div><span>from:</span> savan doshi &lt;savandoshi7@gmail.com&gt;</div>' +
+			'<div><span>to:</span> you</div>' +
+			'<div><span>bcc:</span> everyone else</div>' +
+			'<div><span>date:</span> ' + post.dateFull + '</div>' +
+			'<div><span>subject:</span> ' + escapeHtml(post.subject) + '</div>' +
+			'<div><span>mailed-by:</span> ' + (post.mailedBy || 'savan.studio') + '</div>' +
+			'<div><span>signed-by:</span> ' + (post.signedBy || 'savandoshi7@gmail.com') + '</div>' +
+			'</div>' +
+			'<div class="email-body exp-body"></div>' +
+			'<div class="email-nav">' +
+			'<button onclick="navPost(-1)"' + (idx <= 0 ? ' disabled' : '') + '>&larr; newer</button>' +
+			'<button onclick="navPost(1)"' + (idx >= POSTS.length - 1 ? ' disabled' : '') + '>older &rarr;</button>' +
+			'</div>' +
+			'<div class="email-reply">' +
+			'<textarea id="exp-reply-' + post.slug + '" placeholder="respond back&hellip;" rows="3"></textarea>' +
+			'<button onclick="sendReply(\'' + post.slug + '\')">Send reply</button>' +
+			'</div>';
+		}
+		function togglePost(slug) {
+			if (currentSlug === slug) collapsePost();
+			else openPost(slug);
 		}
 		async function openPost(slug) {
 			const post = POSTS.find(function(p) { return p.slug === slug; });
 			if (!post) return;
+			if (currentSlug && currentSlug !== slug) collapsePost(true);
 			currentSlug = slug;
 			markRead(slug);
-			const row = document.querySelector('#inbox-list .inbox-row[data-slug="' + slug + '"]');
-			if (row) { row.classList.remove('unread'); row.classList.add('read'); }
-			// Header
-			document.getElementById('ov-subject').textContent = post.title;
-			document.getElementById('ov-date').textContent = post.dateFull;
-			document.getElementById('ov-details-date').textContent = post.dateFull;
-			document.getElementById('ov-details-subject').textContent = post.subject;
-			document.getElementById('ov-mailed-by').textContent = post.mailedBy || 'savan.studio';
-			document.getElementById('ov-signed-by').textContent = post.signedBy || 'savandoshi7@gmail.com';
-			document.getElementById('ov-details').style.display = 'none';
-			document.getElementById('ov-details-toggle').innerHTML = 'to me &#9662;';
-			document.getElementById('ov-reply-text').value = '';
-			// Body
-			clearOverlayBody();
-			const body = document.getElementById('ov-body');
+			const li = rowFor(slug);
+			if (!li) return;
+			li.classList.remove('unread'); li.classList.add('read');
+			const summary = li.querySelector('.row-summary');
+			const expanded = li.querySelector('.row-expanded');
+			summary.style.display = 'none';
+			expanded.innerHTML = expandedHtml(post);
+			expanded.style.display = 'block';
+			const body = expanded.querySelector('.exp-body');
 			if (post.embed === 'substack') {
 				const embed = document.querySelector('#substack-embed-source .substack-post-embed');
 				if (embed) body.appendChild(embed);
@@ -300,21 +300,22 @@
 					if (currentSlug === slug) body.innerHTML = '<p>Failed to load post.</p>';
 				}
 			}
-			// Newer / older
-			const idx = POSTS.findIndex(function(p) { return p.slug === slug; });
-			document.getElementById('ov-newer').disabled = idx <= 0;
-			document.getElementById('ov-older').disabled = idx >= POSTS.length - 1;
-			// Show overlay + deep link
-			document.getElementById('email-overlay').style.display = 'block';
-			document.body.style.overflow = 'hidden';
 			history.replaceState(null, '', '#' + slug);
+			li.scrollIntoView({ block: 'nearest' });
 		}
-		function closePost() {
+		function collapsePost(silent) {
+			if (!currentSlug) return;
+			const slug = currentSlug;
 			currentSlug = null;
-			clearOverlayBody();
-			document.getElementById('email-overlay').style.display = 'none';
-			document.body.style.overflow = '';
-			history.replaceState(null, '', window.location.pathname + window.location.search);
+			clearExpandedBody();
+			const li = rowFor(slug);
+			if (li) {
+				li.querySelector('.row-summary').style.display = '';
+				const expanded = li.querySelector('.row-expanded');
+				expanded.style.display = 'none';
+				expanded.innerHTML = '';
+			}
+			if (!silent) history.replaceState(null, '', window.location.pathname + window.location.search);
 		}
 		function navPost(dir) {
 			if (!currentSlug) return;
@@ -322,30 +323,34 @@
 			const next = POSTS[idx + dir];
 			if (next) openPost(next.slug);
 		}
-		function toggleDetails() {
-			const details = document.getElementById('ov-details');
+		function toggleDetails(slug) {
+			const details = document.getElementById('exp-details-' + slug);
+			if (!details) return;
 			const isOpen = details.style.display === 'block';
 			details.style.display = isOpen ? 'none' : 'block';
-			document.getElementById('ov-details-toggle').innerHTML = isOpen ? 'to me &#9662;' : 'to me &#9652;';
+			const li = rowFor(slug);
+			const btn = li ? li.querySelector('.email-to-line button') : null;
+			if (btn) btn.innerHTML = isOpen ? 'to me &#9662;' : 'to me &#9652;';
 		}
-		function sendReply() {
-			const post = POSTS.find(function(p) { return p.slug === currentSlug; });
+		function sendReply(slug) {
+			const post = POSTS.find(function(p) { return p.slug === slug; });
 			if (!post) return;
-			const text = document.getElementById('ov-reply-text').value;
+			const textEl = document.getElementById('exp-reply-' + slug);
+			const text = textEl ? textEl.value : '';
 			const url = 'mailto:savan@duck.com?subject=' + encodeURIComponent('Re: ' + post.title) + (text ? '&body=' + encodeURIComponent(text) : '');
 			window.location.href = url;
 		}
-		// Deep links: #slug opens that post in the overlay.
+		// Deep links: #slug expands that post inline and scrolls to it.
 		function openFromHash() {
 			const hash = window.location.hash.replace(/^#/, '');
-			if (!hash) { if (currentSlug) closePost(); return; }
+			if (!hash) { if (currentSlug) collapsePost(); return; }
 			const postId = hash.replace(/^post-/, '');
 			if (POSTS.some(function(p) { return p.slug === postId; })) {
 				if (currentSlug !== postId) openPost(postId);
 			}
 		}
 		document.addEventListener('keydown', function(e) {
-			if (e.key === 'Escape' && currentSlug) closePost();
+			if (e.key === 'Escape' && currentSlug) collapsePost();
 		});
 		window.addEventListener('DOMContentLoaded', function() {
 			renderRows();

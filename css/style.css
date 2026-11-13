@@ -1943,6 +1943,7 @@ input[type="text"] {
 /*# sourceMappingURL=style.css.map */
 
 /* Inbox blog */
+#fh5co-blog .container { max-width: 1400px; }
 .inbox-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 20px; font-family: "Courier New", monospace; }
 .inbox-title { font-size: 24px; font-weight: 700; color: #2c3e50; }
 .inbox-count { background: #DD356E; color: #fff; font-size: 13px; font-weight: 700; border-radius: 12px; padding: 3px 9px; vertical-align: middle; }
@@ -1955,23 +1956,20 @@ input[type="text"] {
 .inbox-tabs button.active { background: #DD356E; border-color: #DD356E; color: #fff; font-weight: 700; }
 .inbox-mark-read { font-family: "Courier New", monospace; font-size: 14px; background: none; border: none; color: #DD356E; cursor: pointer; text-decoration: underline; padding: 0; }
 .inbox-list { list-style: none; margin: 0; padding: 0; border-top: 2px solid #ddd; font-family: "Courier New", monospace; }
-.inbox-row { display: flex; align-items: baseline; gap: 14px; padding: 18px 12px; border-bottom: 1px solid #ddd; cursor: pointer; }
-.inbox-row:hover { background: #f8f9fa; }
-.inbox-row .dot { width: 10px; height: 10px; border-radius: 50%; background: #DD356E; flex: 0 0 auto; transform: translateY(-1px); visibility: hidden; }
-.inbox-row.unread .dot { visibility: visible; }
-.inbox-row .sender { flex: 0 0 120px; color: #2c3e50; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.inbox-row .subject { flex: 0 1 auto; min-width: 0; font-size: 16px; color: #2c3e50; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.inbox-row.unread .subject { font-weight: 700; }
-.inbox-row .snippet { flex: 1; min-width: 0; font-size: 16px; color: #6c757d; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.inbox-row .date { flex: 0 0 auto; font-size: 13px; color: #6c757d; white-space: nowrap; }
+.inbox-row { border-bottom: 1px solid #ddd; }
+.row-summary { display: flex; align-items: baseline; gap: 14px; padding: 18px 12px; cursor: pointer; }
+.row-summary:hover { background: #f8f9fa; }
+.row-summary .dot { width: 10px; height: 10px; border-radius: 50%; background: #DD356E; flex: 0 0 auto; transform: translateY(-1px); visibility: hidden; }
+.inbox-row.unread .row-summary .dot { visibility: visible; }
+.row-summary .sender { flex: 0 0 120px; color: #2c3e50; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row-summary .subject { flex: 0 1 auto; min-width: 0; font-size: 16px; color: #2c3e50; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.inbox-row.unread .row-summary .subject { font-weight: 700; }
+.row-summary .snippet { flex: 1; min-width: 0; font-size: 16px; color: #6c757d; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row-summary .date { flex: 0 0 auto; font-size: 13px; color: #6c757d; white-space: nowrap; }
 .inbox-empty { font-family: "Courier New", monospace; color: #6c757d; text-align: center; padding: 30px 0; }
-/* Opened-email overlay */
-#email-overlay { position: fixed; inset: 0; z-index: 9999; font-family: "Courier New", monospace; }
-.email-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.5); }
-.email-window { position: relative; max-width: 780px; margin: 5vh auto; background: #fff; border: 2px solid #ddd; border-radius: 8px; box-shadow: 6px 6px 0px rgba(0,0,0,0.2); padding: 32px 36px; max-height: 90vh; overflow-y: auto; }
-.email-topbar { display: flex; justify-content: space-between; margin-bottom: 18px; }
-.email-topbar button { font-family: "Courier New", monospace; font-size: 14px; background: none; border: none; color: #DD356E; cursor: pointer; padding: 0; }
-.email-topbar .email-close { font-size: 18px; }
+/* Expanded post, inline in the list */
+.row-expanded { padding: 4px 12px 28px; font-family: "Courier New", monospace; }
+.exp-collapse { font-family: "Courier New", monospace; font-size: 14px; background: none; border: none; color: #DD356E; cursor: pointer; padding: 0; margin-bottom: 14px; }
 .email-subject { font-size: 30px; font-weight: 700; color: #2c3e50; border-bottom: 2px solid #DD356E; padding-bottom: 10px; margin-bottom: 18px; }
 .email-sender { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 16px; }
 .email-avatar { width: 44px; height: 44px; border-radius: 50%; background: #DD356E; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 22px; flex: 0 0 auto; }
@@ -1992,15 +1990,11 @@ input[type="text"] {
 @media (max-width: 767px) {
   .inbox-toolbar { gap: 10px; }
   #inbox-search { flex: 1 1 100%; min-width: 0; }
-  .inbox-row { flex-wrap: wrap; gap: 2px 12px; padding: 16px 8px; }
-  .inbox-row .sender { flex: 1 1 auto; order: 1; }
-  .inbox-row .date { order: 2; margin-left: auto; }
-  .inbox-row .subject { order: 3; flex: 1 1 100%; }
-  .inbox-row .snippet { order: 4; flex: 1 1 100%; display: block; }
-  .email-window { margin: 0; max-width: none; max-height: 100vh; height: 100%; border: none; border-radius: 0; box-shadow: none; padding: 20px; }
+  .row-summary { flex-wrap: wrap; gap: 2px 12px; padding: 16px 8px; }
+  .row-summary .sender { flex: 1 1 auto; order: 1; }
+  .row-summary .date { order: 2; margin-left: auto; }
+  .row-summary .subject { order: 3; flex: 1 1 100%; }
+  .row-summary .snippet { order: 4; flex: 1 1 100%; display: block; }
   .email-subject { font-size: 24px; }
   .email-date { display: none; }
 }
-
-/* Blog inbox uses a wider container than the rest of the site */
-#fh5co-blog .container { max-width: 1400px; }

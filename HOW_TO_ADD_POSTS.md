@@ -1,6 +1,6 @@
 # How to Add New Blog Posts
 
-The blog is an inbox: posts are email rows in `blog.html`, and clicking a row opens the post like an opened email.
+The blog is an inbox: posts are email rows in `blog.html`, and clicking a row expands the post inline, like an opened email in the list. Clicking it again (or "Click to collapse ←") collapses it back to a row.
 
 ## Native post (written in Markdown)
 

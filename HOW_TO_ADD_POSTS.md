@@ -2,51 +2,22 @@
 
 ## Quick Guide
 
-1. **Open `js/posts-data.js`**
-2. **Add a new entry** to the `BLOG_POSTS` object:
+1. **Write the post** — add a Markdown file in `posts/`, named after the slug, e.g. `posts/my-new-post.md`. Plain prose works; an optional `---` frontmatter block at the top is stripped when the post is displayed.
 
-```javascript
-'my-new-post': {
-  title: "My New Post Title",
-  date: "2023-12-20",
-  subject: "My New Post Subject",
-  content: `
-    <p>Your post content here...</p>
-    <p>More paragraphs...</p>
-  `
-}
-```
+2. **Add it to `blog.html`** — copy one of the existing `<article>` blocks and change:
+   - the wrapper id to `post-my-new-post`
+   - the `onclick` to `loadAndDisplayPost('my-new-post')`
+   - the title, date, summary, and email-header subject
 
-3. **Add the post ID** to the `postIds` array in `blog.html`:
+That's it — the post shows up in the list automatically.
 
-```javascript
-const postIds = ['spaghetti-incident', 'coffee-shop', 'my-new-post'];
-```
+## Direct links
 
-## Example
+Every post is linkable. Share `https://savan.studio/blog.html#my-new-post` and the reader lands on the blog with that post already expanded and scrolled into view. The older `#post-my-new-post` form works too.
 
-To add a post about debugging:
+Clicking "read more" on a post also puts its link in the address bar, so you can just copy the URL from there.
 
-```javascript
-// In js/posts-data.js
-'debugging-at-3am': {
-  title: "Debugging at 3 AM: A Love Story",
-  date: "2023-11-28",
-  subject: "Debugging at 3 AM: A Love Story",
-  content: `
-    <p>There's something special about debugging at 3 AM. The world is quiet, your brain is fried, and you're convinced that the bug you're chasing is actually a ghost in the machine. Spoiler alert: it's usually just a missing semicolon.</p>
-    <p>But hey, at least you get to experience that sweet, sweet dopamine rush when you finally figure it out. Even if it's 4 AM and you have work in 3 hours.</p>
-  `
-}
-```
+## How it works
 
-Then add `'debugging-at-3am'` to the `postIds` array in `blog.html`.
-
-## Features
-
-- **Direct linking**: `blog.html#post-my-new-post`
-- **Email headers**: Automatically generated from title/subject
-- **Expand/collapse**: Full functionality preserved
-- **All styling**: Maintains the email inbox aesthetic
-
-That's it! Your new post will appear in the blog automatically. 
+- `blog.html` lists the posts; each post's full text lives in `posts/<slug>.md` and is fetched when the reader clicks "read more".
+- The inline script at the bottom of `blog.html` handles expanding/collapsing, the `#slug` deep link on load and on hash change, and updating the URL when a post is opened or collapsed.

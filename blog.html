@@ -232,6 +232,10 @@
 				readMore.textContent = 'Click to collapse ←';
 				readMore.onclick = function() { collapsePost(postId); };
 				
+				// Deep link: put this post in the URL so the link can be
+				// copied and shared (no reload, no extra history entry)
+				history.replaceState(null, '', '#' + postId);
+				
 			} catch (error) {
 				console.error('Error loading post:', error);
 				alert('Failed to load post');
@@ -251,26 +255,27 @@
 			// Change button back to read more
 			readMore.textContent = 'Click to read more →';
 			readMore.onclick = function() { loadAndDisplayPost(postId); };
+			
+			// Clear the deep link now that the post is collapsed
+			history.replaceState(null, '', window.location.pathname + window.location.search);
 		}
 		
-		// On page load or hash change, auto-expand if hash is present
-		function expandFromHash() {
-			const hash = window.location.hash.replace('#', '');
-			if (hash) {
-				const post = document.getElementById(hash);
-				if (post) {
-					togglePost(post);
-				}
+		// On page load or hash change, auto-expand the linked post and scroll to it.
+		// Accepts both #slug and #post-slug.
+		async function expandFromHash() {
+			const hash = window.location.hash.replace(/^#/, '');
+			if (!hash) return;
+			const postId = hash.replace(/^post-/, '');
+			const postElement = document.getElementById(`post-${postId}`);
+			if (!postElement) return;
+			const postFull = postElement.querySelector('.post-full');
+			if (postFull.style.display !== 'block') {
+				await loadAndDisplayPost(postId);
 			}
+			postElement.scrollIntoView();
 		}
 		window.addEventListener('DOMContentLoaded', expandFromHash);
-		window.addEventListener('hashchange', function() {
-			// Only expand if overlay is not already open
-			const overlay = document.getElementById('blog-overlay');
-			if (overlay.style.display !== 'block') {
-				expandFromHash();
-			}
-		});
+		window.addEventListener('hashchange', expandFromHash);
 
 	</script>
 

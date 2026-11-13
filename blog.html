@@ -227,10 +227,14 @@
 				postSummary.style.display = 'none';
 				postFull.style.display = 'block';
 				
-				// Change the read-more button to collapse
-				const readMore = postElement.querySelector('.read-more');
-				readMore.textContent = 'Click to collapse ←';
-				readMore.onclick = function() { collapsePost(postId); };
+				// The read-more button lives inside the summary, which is
+				// hidden once the post expands, so put the collapse control
+				// on the visible full post instead.
+				const collapseLink = document.createElement('p');
+				collapseLink.className = 'read-more';
+				collapseLink.textContent = 'Click to collapse ←';
+				collapseLink.onclick = function() { collapsePost(postId); };
+				postFull.appendChild(collapseLink);
 				
 				// Deep link: put this post in the URL so the link can be
 				// copied and shared (no reload, no extra history entry)

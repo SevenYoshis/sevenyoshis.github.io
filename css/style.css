@@ -1998,3 +1998,19 @@ input[type="text"] {
   .email-subject { font-size: 24px; }
   .email-date { display: none; }
 }
+
+/* Mobile nav: show the links under the logo instead of the hidden hamburger + slide-in panel */
+@media (max-width: 768px) {
+  .fh5co-nav .top-menu { padding: 18px 0 12px; }
+  .fh5co-nav #fh5co-logo { font-size: 26px; }
+  .fh5co-nav .top-menu .col-xs-2,
+  .fh5co-nav .top-menu .col-xs-10 { width: 100%; float: none; text-align: center; }
+  .fh5co-nav .menu-1 { display: block; margin-top: 6px; }
+  .fh5co-nav ul { margin: 0; }
+  .fh5co-nav ul li a { font-size: 16px; padding: 8px 10px; }
+  .fh5co-nav-toggle { display: none !important; }
+  .fh5co-heading h2 { font-size: 30px; margin-bottom: 10px; }
+}
+/* Keep third-party embeds inside the viewport */
+.substack-post-embed,
+.substack-post-embed iframe { max-width: 100%; }

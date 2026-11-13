@@ -282,5 +282,19 @@
 		socialIconHover();
 	});
 
+	// Dark mode toggle: button in the nav, choice saved in localStorage.
+	var themeToggle = document.getElementById('theme-toggle');
+	if (themeToggle) {
+		var setThemeIcon = function() {
+			themeToggle.textContent = document.documentElement.classList.contains('dark-mode') ? '\u2600' : '\u263e';
+		};
+		setThemeIcon();
+		themeToggle.addEventListener('click', function() {
+			var dark = document.documentElement.classList.toggle('dark-mode');
+			try { localStorage.setItem('savan-theme', dark ? 'dark' : 'light'); } catch (e) {}
+			setThemeIcon();
+		});
+	}
+
 
 }());

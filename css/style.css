@@ -2019,7 +2019,7 @@ input[type="text"] {
 /* No horizontal scrolling, ever: lock the document to the viewport width */
 html, body { overflow-x: hidden; }
 /* Dark mode: toggle button in the nav; choice saved in localStorage */
-.theme-toggle { background: none; border: none; font-size: 24px; padding: 30px 18px; min-width: 48px; color: #333; cursor: pointer; line-height: 1; vertical-align: middle; }
+.theme-toggle { background: none; border: none; font-size: 20px; padding: 30px 15px; min-width: 48px; color: #333; cursor: pointer; line-height: 1; vertical-align: middle; }
 .theme-toggle:hover { color: #000; }
 html.dark-mode body { background: #000; color: #fff; }
 html.dark-mode h1, html.dark-mode h2, html.dark-mode h3, html.dark-mode h4, html.dark-mode h5, html.dark-mode h6 { color: #fff; }
@@ -2047,5 +2047,5 @@ html.dark-mode .email-reply textarea { background: #0d0d0d; border-color: #2a2a2
 html.dark-mode .email-nav button { background: #111; }
 html.dark-mode .inbox-empty { color: #999; }
 @media (max-width: 768px) {
-  .theme-toggle { font-size: 22px; padding: 12px 14px; min-width: 48px; }
+  .theme-toggle { font-size: 16px; padding: 8px 10px; min-width: 48px; }
 }

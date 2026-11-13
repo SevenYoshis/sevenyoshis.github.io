@@ -286,7 +286,7 @@
 	var themeToggle = document.getElementById('theme-toggle');
 	if (themeToggle) {
 		var setThemeIcon = function() {
-			themeToggle.textContent = document.documentElement.classList.contains('dark-mode') ? '\u2600' : '\u263e';
+			themeToggle.textContent = document.documentElement.classList.contains('dark-mode') ? '\u2600 Light' : '\u263e Dark';
 		};
 		setThemeIcon();
 		themeToggle.addEventListener('click', function() {

@@ -2009,8 +2009,12 @@ input[type="text"] {
   .fh5co-nav ul { margin: 0; }
   .fh5co-nav ul li a { font-size: 16px; padding: 8px 10px; }
   .fh5co-nav-toggle { display: none !important; }
+  #fh5co-offcanvas { display: none !important; }
   .fh5co-heading h2 { font-size: 30px; margin-bottom: 10px; }
 }
 /* Keep third-party embeds inside the viewport */
 .substack-post-embed,
 .substack-post-embed iframe { max-width: 100%; }
+
+/* No horizontal scrolling, ever: lock the document to the viewport width */
+html, body { overflow-x: hidden; }

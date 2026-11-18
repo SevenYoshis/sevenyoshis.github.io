@@ -797,9 +797,9 @@ h2{font-size:80px;line-height:1;letter-spacing:-.037em}
 .person-gallery{min-width:0;position:relative}
 .gallery-heading{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:13px}
 .gallery-heading h3{font:400 31px/1.1 var(--serif);letter-spacing:-.025em;color:var(--forest);margin:0}
-.gallery-track{position:relative;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;touch-action:pan-y;aspect-ratio:3/4;width:100%;background:#eeeade;border:1px solid #d7d7c7;border-radius:3px;scroll-behavior:smooth}
+.gallery-track{position:relative;display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;touch-action:pan-y;aspect-ratio:3/4;width:100%;background:#eeeade;border:1px solid #d7d7c7;border-radius:3px;scroll-behavior:smooth}
 .gallery-track::-webkit-scrollbar{display:none}
-.gallery-slide,.person-gallery .portrait-print,.person-gallery .portrait-print:first-child{flex:0 0 100%;min-width:0;width:100%;height:100%;margin:0;padding:0;scroll-snap-align:start;scroll-snap-stop:always;background:#f8f4ea;border:0;box-sizing:border-box}
+.gallery-slide,.person-gallery .portrait-print,.person-gallery .portrait-print:first-child{flex:0 0 85%;min-width:0;width:100%;height:100%;margin:0;padding:0;scroll-snap-align:start;scroll-snap-stop:always;background:#f8f4ea;border:0;box-sizing:border-box}
 .gallery-slide img,.person-gallery .portrait-print img{width:100%;height:100%;max-width:100%;object-fit:contain;aspect-ratio:auto;display:block;user-select:none;-webkit-user-select:none;-webkit-user-drag:none}
 .gallery-slide.kind-portrait img{padding:9px;background:#fffaf0}
 .gallery-slide.kind-photo img{background:#ece7da}
@@ -1188,11 +1188,12 @@ h2{font-size:80px;line-height:1;letter-spacing:-.037em}
   const name=gallery.querySelector('h3').textContent;
   let selected=0,destination=null,settleTimer=null,scrollFrame=null,lastWidth=0,drag=null;
   const clamp=i=>Math.max(0,Math.min(slides.length-1,i));
-  const nearest=()=>clamp(Math.round(track.scrollLeft/Math.max(1,track.clientWidth)));
+  const step=()=>slides.length>1?Math.max(1,slides[1].offsetLeft-slides[0].offsetLeft):Math.max(1,track.clientWidth);
+  const nearest=()=>clamp(Math.round(track.scrollLeft/step()));
   function render(i,announce=false){
    selected=clamp(i);gallery.dataset.index=String(selected);
    if(count)count.textContent=`0${selected+1} / 0${slides.length}`;
-   previous.disabled=selected===0;next.disabled=selected===slides.length-1;
+   previous.disabled=false;next.disabled=false;
    dots.forEach((dot,j)=>{
     if(j===selected)dot.setAttribute('aria-current','true');else dot.removeAttribute('aria-current');
    });
@@ -1202,7 +1203,7 @@ h2{font-size:80px;line-height:1;letter-spacing:-.037em}
   }
   function go(i,animate=true,announce=true){
    const target=clamp(i);destination=target;render(target,announce);
-   track.scrollTo({left:target*track.clientWidth,behavior:animate&&!reduced.matches?'smooth':'instant'});
+   track.scrollTo({left:slides[target].offsetLeft,behavior:animate&&!reduced.matches?'smooth':'instant'});
    if(!animate||reduced.matches)destination=null;
   }
   function settle(){
@@ -1215,8 +1216,8 @@ h2{font-size:80px;line-height:1;letter-spacing:-.037em}
    clearTimeout(settleTimer);settleTimer=setTimeout(settle,60);
   },{passive:true});
   track.addEventListener('scrollend',settle);
-  previous.addEventListener('click',()=>go(selected-1));
-  next.addEventListener('click',()=>go(selected+1));
+  previous.addEventListener('click',()=>go(selected===0?slides.length-1:selected-1));
+  next.addEventListener('click',()=>go(selected===slides.length-1?0:selected+1));
   dots.forEach(dot=>dot.addEventListener('click',()=>go(Number(dot.dataset.index))));
   track.addEventListener('keydown',e=>{
    let target=selected;
@@ -1231,9 +1232,14 @@ h2{font-size:80px;line-height:1;letter-spacing:-.037em}
   // reliably on iOS Safari), pointer events drive desktop mouse dragging.
   // Vertical movement is never taken over, so the page still scrolls.
   function swipeTarget(dx,vx){
-   const width=Math.max(1,track.clientWidth);
-   const flick=vx<-0.12?-1:vx>0.12?1:0;
-   return flick!==0?selected+flick:(Math.abs(dx)>width*0.12?(dx<0?selected+1:selected-1):nearest());
+   const flick=vx<-0.08?-1:vx>0.08?1:0;
+   let target;
+   if(flick!==0)target=selected+flick;
+   else if(Math.abs(dx)>15)target=dx<0?selected+1:selected-1;
+   else return nearest();
+   if(target<0)target=slides.length-1;
+   if(target>=slides.length)target=0;
+   return target;
   }
   track.addEventListener('pointerdown',e=>{
    if(e.pointerType!=='mouse'||e.button!==0)return;
@@ -1243,7 +1249,7 @@ h2{font-size:80px;line-height:1;letter-spacing:-.037em}
   track.addEventListener('pointermove',e=>{
    if(!drag||e.pointerId!==drag.id)return;
    const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
-   if(!drag.moved&&(Math.abs(dx)<4||Math.abs(dx)<Math.abs(dy)))return;
+   if(!drag.moved&&(Math.abs(dx)<2||Math.abs(dx)<Math.abs(dy)))return;
    if(!drag.captured){drag.captured=true;try{track.setPointerCapture(e.pointerId)}catch(_){}}
    drag.moved=true;track.classList.add('is-dragging');
    const now=performance.now(),dt=Math.max(1,now-drag.lastT);
@@ -1270,7 +1276,7 @@ h2{font-size:80px;line-height:1;letter-spacing:-.037em}
   track.addEventListener('touchmove',e=>{
    if(!touch||e.touches.length!==1)return;
    const t0=e.touches[0],dx=t0.clientX-touch.x,dy=t0.clientY-touch.y;
-   if(!touch.moved&&(Math.abs(dx)<4||Math.abs(dx)<Math.abs(dy))){
+   if(!touch.moved&&(Math.abs(dx)<2||Math.abs(dx)<Math.abs(dy))){
     if(Math.abs(dy)>Math.abs(dx))touch=null;
     return;
    }

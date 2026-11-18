@@ -1227,12 +1227,16 @@ h2{font-size:80px;line-height:1;letter-spacing:-.037em}
    else return;
    e.preventDefault();go(target);
   });
-  // Swipe drives the carousel for touch and mouse alike. touch-action:pan-y
-  // on the track leaves vertical page scrolling to the browser; a horizontal
-  // swipe is handled here, so a short flick still changes photo instead of
-  // snapping back. Vertical movement is never captured, so the page scrolls.
+  // Swipe: touch events drive phones (pointer events alone did not swipe
+  // reliably on iOS Safari), pointer events drive desktop mouse dragging.
+  // Vertical movement is never taken over, so the page still scrolls.
+  function swipeTarget(dx,vx){
+   const width=Math.max(1,track.clientWidth);
+   const flick=vx<-0.35?-1:vx>0.35?1:0;
+   return flick!==0?selected+flick:(Math.abs(dx)>width*0.25?(dx<0?selected+1:selected-1):nearest());
+  }
   track.addEventListener('pointerdown',e=>{
-   if(e.pointerType==='mouse'&&e.button!==0)return;
+   if(e.pointerType!=='mouse'||e.button!==0)return;
    destination=null;clearTimeout(settleTimer);
    drag={id:e.pointerId,x:e.clientX,y:e.clientY,left:track.scrollLeft,moved:false,captured:false,lastX:e.clientX,lastT:performance.now(),vx:0};
   });
@@ -1252,13 +1256,39 @@ h2{font-size:80px;line-height:1;letter-spacing:-.037em}
    const d=drag;drag=null;track.classList.remove('is-dragging');
    if(d.captured&&track.hasPointerCapture(e.pointerId))track.releasePointerCapture(e.pointerId);
    if(!d.moved)return;
-   const dx=e.clientX-d.x,width=Math.max(1,track.clientWidth);
-   const flick=d.vx<-0.35?-1:d.vx>0.35?1:0;
-   const target=flick!==0?selected+flick:(Math.abs(dx)>width*0.25?(dx<0?selected+1:selected-1):nearest());
-   go(target);
+   go(swipeTarget(e.clientX-d.x,d.vx));
   }
   track.addEventListener('pointerup',finishDrag);track.addEventListener('pointercancel',finishDrag);
   track.addEventListener('lostpointercapture',()=>{drag=null;track.classList.remove('is-dragging')});
+  let touch=null;
+  track.addEventListener('touchstart',e=>{
+   if(e.touches.length!==1)return;
+   destination=null;clearTimeout(settleTimer);
+   const t0=e.touches[0];
+   touch={x:t0.clientX,y:t0.clientY,left:track.scrollLeft,moved:false,lastX:t0.clientX,lastT:performance.now(),vx:0};
+  },{passive:true});
+  track.addEventListener('touchmove',e=>{
+   if(!touch||e.touches.length!==1)return;
+   const t0=e.touches[0],dx=t0.clientX-touch.x,dy=t0.clientY-touch.y;
+   if(!touch.moved&&(Math.abs(dx)<8||Math.abs(dx)<Math.abs(dy))){
+    if(Math.abs(dy)>Math.abs(dx))touch=null;
+    return;
+   }
+   touch.moved=true;track.classList.add('is-dragging');
+   const now=performance.now(),dt=Math.max(1,now-touch.lastT);
+   touch.vx=(t0.clientX-touch.lastX)/dt;touch.lastX=t0.clientX;touch.lastT=now;
+   if(e.cancelable)e.preventDefault();
+   track.scrollLeft=touch.left-dx;
+  },{passive:false});
+  function finishTouch(e){
+   if(!touch)return;
+   const d=touch;touch=null;track.classList.remove('is-dragging');
+   if(!d.moved)return;
+   const endX=e.changedTouches&&e.changedTouches.length?e.changedTouches[0].clientX:d.lastX;
+   go(swipeTarget(endX-d.x,d.vx));
+  }
+  track.addEventListener('touchend',finishTouch);
+  track.addEventListener('touchcancel',()=>{touch=null;track.classList.remove('is-dragging')});
   // A resize or envelope replay must not reset the photo selected in either card.
   function align(){
    const width=track.clientWidth;

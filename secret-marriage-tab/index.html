@@ -1227,26 +1227,35 @@ h2{font-size:80px;line-height:1;letter-spacing:-.037em}
    else return;
    e.preventDefault();go(target);
   });
-  // Native touch swipe handles scrolling. Mouse dragging is an optional desktop
-  // equivalent; vertical phone scrolling and pinch zoom remain browser-native.
+  // Swipe drives the carousel for touch and mouse alike. touch-action:pan-y
+  // on the track leaves vertical page scrolling to the browser; a horizontal
+  // swipe is handled here, so a short flick still changes photo instead of
+  // snapping back. Vertical movement is never captured, so the page scrolls.
   track.addEventListener('pointerdown',e=>{
+   if(e.pointerType==='mouse'&&e.button!==0)return;
    destination=null;clearTimeout(settleTimer);
-   if(e.pointerType!=='mouse'||e.button!==0)return;
-   drag={id:e.pointerId,x:e.clientX,y:e.clientY,left:track.scrollLeft,moved:false};
-   track.setPointerCapture(e.pointerId);
+   drag={id:e.pointerId,x:e.clientX,y:e.clientY,left:track.scrollLeft,moved:false,captured:false,lastX:e.clientX,lastT:performance.now(),vx:0};
   });
   track.addEventListener('pointermove',e=>{
    if(!drag||e.pointerId!==drag.id)return;
    const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
-   if(!drag.moved && (Math.abs(dx)<7 || Math.abs(dx)<Math.abs(dy)))return;
+   if(!drag.moved&&(Math.abs(dx)<8||Math.abs(dx)<Math.abs(dy)))return;
+   if(!drag.captured){drag.captured=true;try{track.setPointerCapture(e.pointerId)}catch(_){}}
    drag.moved=true;track.classList.add('is-dragging');
-   e.preventDefault();track.scrollLeft=drag.left-dx;
+   const now=performance.now(),dt=Math.max(1,now-drag.lastT);
+   drag.vx=(e.clientX-drag.lastX)/dt;drag.lastX=e.clientX;drag.lastT=now;
+   if(e.cancelable)e.preventDefault();
+   track.scrollLeft=drag.left-dx;
   });
   function finishDrag(e){
    if(!drag||e.pointerId!==drag.id)return;
-   const moved=drag.moved;drag=null;track.classList.remove('is-dragging');
-   if(track.hasPointerCapture(e.pointerId))track.releasePointerCapture(e.pointerId);
-   if(moved)go(nearest());
+   const d=drag;drag=null;track.classList.remove('is-dragging');
+   if(d.captured&&track.hasPointerCapture(e.pointerId))track.releasePointerCapture(e.pointerId);
+   if(!d.moved)return;
+   const dx=e.clientX-d.x,width=Math.max(1,track.clientWidth);
+   const flick=d.vx<-0.35?-1:d.vx>0.35?1:0;
+   const target=flick!==0?selected+flick:(Math.abs(dx)>width*0.25?(dx<0?selected+1:selected-1):nearest());
+   go(target);
   }
   track.addEventListener('pointerup',finishDrag);track.addEventListener('pointercancel',finishDrag);
   track.addEventListener('lostpointercapture',()=>{drag=null;track.classList.remove('is-dragging')});
